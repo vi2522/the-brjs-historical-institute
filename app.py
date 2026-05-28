@@ -635,7 +635,10 @@ SOURCE_TYPES = [
 @app.route("/")
 def index():
     conn = get_db_connection()
-    sources = conn.execute("SELECT * FROM sources ORDER BY id DESC").fetchall()
+    sources = [
+    dict(row) for row in conn.execute(
+        "SELECT * FROM sources ORDER BY id DESC"
+    ).fetchall()]
     total_sources = conn.execute("SELECT COUNT(*) FROM sources").fetchone()[0]
     primary_sources = conn.execute("SELECT COUNT(*) FROM sources WHERE source_type = 'Primary Source'").fetchone()[0]
     secondary_sources = conn.execute("SELECT COUNT(*) FROM sources WHERE source_type = 'Secondary Source'").fetchone()[0]
@@ -683,7 +686,10 @@ def add_source():
 @app.route("/edit/<int:source_id>")
 def edit_source(source_id):
     conn = get_db_connection()
-    sources = conn.execute("SELECT * FROM sources ORDER BY id DESC").fetchall()
+    sources = [
+    dict(row) for row in conn.execute(
+        "SELECT * FROM sources ORDER BY id DESC"
+    ).fetchall()]
     edit_source = conn.execute("SELECT * FROM sources WHERE id = ?", (source_id,)).fetchone()
     total_sources = conn.execute("SELECT COUNT(*) FROM sources").fetchone()[0]
     primary_sources = conn.execute("SELECT COUNT(*) FROM sources WHERE source_type = 'Primary Source'").fetchone()[0]
@@ -742,7 +748,10 @@ def delete_source(source_id):
 @app.route("/export")
 def export_csv():
     conn = get_db_connection()
-    sources = conn.execute("SELECT * FROM sources ORDER BY id DESC").fetchall()
+    sources = [
+    dict(row) for row in conn.execute(
+        "SELECT * FROM sources ORDER BY id DESC"
+    ).fetchall()]
     conn.close()
 
     output = io.StringIO()
@@ -788,7 +797,10 @@ def export_csv():
 @app.route("/api/sources")
 def api_sources():
     conn = get_db_connection()
-    sources = conn.execute("SELECT * FROM sources ORDER BY id DESC").fetchall()
+    sources = [
+    dict(row) for row in conn.execute(
+        "SELECT * FROM sources ORDER BY id DESC"
+    ).fetchall()]
     conn.close()
     return jsonify([dict(source) for source in sources])
 
